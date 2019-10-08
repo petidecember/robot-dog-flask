@@ -1,0 +1,111 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <link rel='stylesheet' type='text/css' media='screen' href='static/main.css'>
+    <link rel="shortcut icon" type="image/ico" href="static/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="static/joystick.css">
+    <title>WebRTC webcam</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <body>
+
+        <!-- Wrapper -->
+                <div id="wrapper">
+    
+                    <!-- Header -->
+                        <header id="header" class="header">
+                            <span id="menu">  
+                                <a id="avatar" href="#"><img src="static/Joystick.png" alt="" /></a>
+                                <a id="avatar1" href="static/Doku.docx"><img src="static/pi.png" alt="" /></a>
+                            </span>
+                           <!-- <h1>Welcome to the <strong>RaspberryPi WebServer</strong>, a responsive website designed by <a href="index2.html">MICHAEL BORCA</a><br />
+                             and published at <a href="#">...</a></h1>
+                            <ul class="icons">
+                                <li><a href="#" class="icon style2 fa-twitter"><span class="label">Twitter</span></a></li>
+                                <li><a href="#" class="icon style2 fa-facebook"><span class="label">Facebook</span></a></li>
+                                <li><a href="#" class="icon style2 fa-instagram"><span class="label">Instagram</span></a></li>
+                                <li><a href="#" class="icon style2 fa-500px"><span class="label">500px</span></a></li>
+                                <li><a href="#" class="icon style2 fa-envelope-o"><span class="label">Email</span></a></li>
+                            </ul> -->
+                        </header>
+                
+                    <!-- Main -->
+                        <section id="main2">
+                            
+                            <div id="main">
+    
+                                <fieldset id="camera">
+                                    <legend>Camera</legend>
+                                    <div class="cameraFieldset">
+                                        <button id="start" onclick="javascript: start()">Start</button>
+                                        <button id="stop" style="display: none" onclick="javascript: stop()">Stop</button>
+                                        <label>Size:
+                                        <select id="size" onchange="javascript: changeSize()">
+                                            <option value="100%">100%</option>
+                                            <option value="200%">200%</option>
+                                            <option value="300%">300%</option>
+                                        </select></label>
+                                        <label>Tracking Method:
+                                        <select id="method" onchange="javascript: changeStabilise()">
+                                            <option value="stabilise_false">Unstable, faster</option>
+                                            <option value="stabilise_true">Stable, slower</option>
+                                        </select></label>
+                                    </div>
+                                </fieldset>
+
+                                <div id="media">   
+    
+                                    <!-- <audio id="audio" autoplay="true"></audio>
+                                    <video id="video" autoplay="true" playsinline="true"></video> -->
+                                    <img id="stream">
+                                </div>
+
+                                <fieldset id="controls">
+                                    <legend>Tracking Controls</legend>
+                                    <div class="controlsFieldset">
+                                        <div>
+                                            <div class="square"></div>
+                                            <button id="cal" onclick="javascript: calibrate()">Calibrate</button>
+                                        </div>
+                                        <div>
+                                            <div id="follow" class="circle"></div>
+                                            <button id="followb" onclick="javascript: follow_ball()">Follow Ball</button>
+                                        </div>
+                                        <div>
+                                            <div id="draw" class="circle"></div>
+                                            <button id="drawb" onclick="javascript: draw_ball()">Draw Ball</button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset id="controlsphone">
+                                    <legend>Phone Controls</legend>
+                                   
+                        
+                                        <div id="joystickbox">
+                                            <div id="joystickbutton">
+                                              B
+                                            </div>
+                                        </div>
+                                    <div id="demo">
+                                    </div>
+                                    <script src="static/phonecontrols.js"></script>
+                                </fieldset>
+                                <!--h2><a href="static/app.apk">App Download</a></h2-->
+                            </div>
+                        </section>
+                    <!-- Footer -->
+                        <footer id="footer">
+                            <p>&copy; <br /><a href="#" id="mich">MICHAEL BORCA</a><br /><a href="#" id="mich">PETER ISTVANFI</a></p>
+                        </footer>
+    
+                </div>
+    
+            <!-- Scripts -->
+            <script src="static/transitions.js"></script>
+            <script src="static/client.js"></script>
+    </body>
+</html>

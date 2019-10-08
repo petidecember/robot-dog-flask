@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <link rel='stylesheet' type='text/css' media='screen' href='static/main.css'>
+    <link rel="shortcut icon" type="image/ico" href="static/favicon.ico"/>
+    <title>WebRTC webcam</title>
+</head>
+<body>
+
+<div id="main">
+    <div id="media">
+        <h2>Media</h2>
+
+        <!-- <audio id="audio" autoplay="true"></audio>
+        <video id="video" autoplay="true" playsinline="true"></video> -->
+        <img id="stream">
+    </div>
+
+    <fieldset id="camera">
+        <legend>Camera</legend>
+        <div class="cameraFieldset">
+            <button id="start" onclick="javascript: start()">Start</button>
+            <button id="stop" style="display: none" onclick="javascript: stop()">Stop</button>
+            <label>Size:
+            <select id="size" onchange="javascript: changeSize()">
+                <option value="100%">100%</option>
+                <option value="200%">200%</option>
+                <option value="300%">300%</option>
+            </select></label>
+            <label>Tracking Method:
+            <select id="method" onchange="javascript: changeStabilise()">
+                <option value="stabilise_false">Unstable, faster</option>
+                <option value="stabilise_true">Stable, slower</option>
+            </select></label>
+        </div>
+    </fieldset>
+
+    <fieldset id="controls">
+        <legend>Ball Tracking Controls</legend>
+        <div class="controlsFieldset">
+            <div>
+                <div class="square"></div>
+                <button id="cal" onclick="javascript: calibrate()">Calibrate</button>
+            </div>
+            <div>
+                <div id="follow" class="circle"></div>
+                <button onclick="javascript: follow_ball()">Follow Ball</button>
+            </div>
+            <div>
+                <div id="draw" class="circle"></div>
+                <button onclick="javascript: draw_ball()">Draw Ball</button>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<script src="static/client.js"></script>
+</body> 
+</html>

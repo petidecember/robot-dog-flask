@@ -1,0 +1,56 @@
+button {
+    padding: 8px 16px;
+}
+
+img {
+    width: 100%;
+    margin: auto;
+}
+
+#media {
+    max-width: 1280px;
+}
+
+.square {
+    height: 50px;
+    width: 50px;
+    background-color: rgb(100, 61, 61);
+}
+
+.circle {
+    height: 35px;
+    width: 35px;
+    background-color: darkred;
+    border-radius: 50%;
+}
+
+.square, .circle {
+    margin-right: 6px;
+}
+
+#controls, #camera {
+    margin-top: 16px;
+    width: 33%;
+}
+
+.controlsFieldset {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.controlsFieldset > div {
+    display: flex;
+    align-items: center;
+}
+
+.cameraFieldset {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#main {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}

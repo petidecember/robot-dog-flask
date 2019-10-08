@@ -1,0 +1,352 @@
+@import  url("https://fonts.googleapis.com/css?family=Bungee Shade");
+
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+button {
+    padding: 8px 16px;
+}
+
+img {
+    width: 100%;
+    margin: auto;
+}
+
+#media {
+    max-width: 1280px;
+}
+#main{
+    color: wheat;
+    width: 70%;
+}
+h2{
+    font-family: "Bungee Shade";
+    text-shadow: -2px 2px 15px white;
+    color: darkblue;
+    font-size: 2em;
+}
+
+#start{
+    background-color:black;
+    color: wheat;
+    border-radius: 10px 10px;
+    margin: 5px;
+}
+
+#stop{
+    background-color:black;
+    color: wheat;
+    border-radius: 10px 10px;
+    margin: 5px;
+}
+
+#cal{
+    background-color:black;
+    color: wheat;
+    border-radius: 10px 10px;
+    /*box-shadow: 0px 0px 20px white;*/
+}
+
+#followb{
+    background-color:black;
+    color: wheat;
+    border-radius: 10px 10px;
+    /*box-shadow: 0px 0px 20px white;*/
+}
+
+#drawb{
+    background-color:black;
+    color: wheat;
+    border-radius: 10px 10px;
+    /*box-shadow: 0px 0px 20px white;*/
+}
+
+.square {
+    height: 50px;
+    width: 50px;
+    background-color: rgb(100, 61, 61);
+}
+
+.circle {
+    height: 35px;
+    width: 35px;
+    background-color: darkred;
+    border-radius: 50%;
+}
+
+.square, .circle {
+    margin-right: 6px;
+}
+
+#controls, #camera {
+    margin-top: 16px;
+    text-align: center;
+    width: 10%;
+    height: 70vh;
+}
+#controls{
+    float: right;
+}
+#camera{
+    float: left;
+}
+
+.controlsFieldset {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.controlsFieldset > div {
+    display: flex;
+    align-items: center;
+}
+
+.cameraFieldset {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#main{
+    height: 90vh;
+    border-radius: 20px 20px;
+    justify-items: center;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    transition: all 2.6s linear; 
+    box-shadow: 0px 0px 50px white;
+    padding: 2px;
+    border: 3px dotted white;
+    margin-bottom: 60px;
+    margin-top: 50px;
+}
+
+#camera{
+    display:flex;    
+    padding: 10px;
+    margin-left: 20px;
+}
+
+#controls{
+    display: flex;
+    padding: 10px;
+    margin-right: 20px;
+}
+
+#controlsphone{ 
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    padding: 3px;
+    display: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#demo{
+    width: 100%;
+}
+
+body{
+    text-align: center;
+    background-image: url("../static/demo-bg.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
+
+#wrapper{
+    height: 85vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+}
+
+#header{
+    width: 100%;
+    flex-grow: 1;
+}
+
+.icons{
+    display: flex;
+    justify-content: center;
+}
+
+.icons li{
+    margin:20px;
+}
+
+#main2{
+    width: 100%;
+    display: flex;
+    flex-wrap:wrap;
+    justify-content: center;
+    overflow: auto;
+}
+
+
+#footer{
+    color: aqua;
+    flex-grow: 1;
+    align-self: flex-end
+    z-index: 1;
+}
+
+#menu{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#avatar{
+    transform: translateY(10px);
+    margin: 50px;
+}
+
+#avatar1{
+    margin: 50px;
+}
+
+img{
+    width: 100px;
+    padding: 5px;
+    border: solid 0.5px @border;
+    transition: all 0.6s linear;
+}
+
+img:hover{
+    border-radius: 30px 30px;
+    box-shadow: 0px 0px 50px white;
+    width: 250px;
+    border: 1px solid white;
+}
+
+a{
+    transition: all 0.4s linear;
+}
+
+a:hover{
+    font-size: 1.3em;
+}
+
+h1{
+    font-size: 2vw;
+    color:darkblue;
+    font-family: 'Bungee Shade'; 
+    text-shadow: -5px 5px 20px white;
+}
+
+
+#mich{
+    transition: all 0.6s linear;
+    text-decoration: none;
+    color:aqua;
+}
+#mich:hover{
+    font-size: 1.2em;
+}
+
+#main{
+    transition: all 0.6s linear;
+}
+
+#stream{
+    width: 50%;
+    transition: all 0.6s linear;
+    margin: 0;
+}
+#media{
+    display: inline;
+    align-self: center;
+}
+#stream:hover{
+    width: 95%;
+    margin-bottom: 300px;
+    max-height: 100%;
+}
+
+h2{
+    width:100%;
+}
+
+fieldset{
+    margin: 0;
+    border: 1px solid darkblue;
+    box-shadow: 0 0 13px white;
+    border-radius: 10px 10px;
+    margin-bottom: 40px;
+    font-size: 0.8em;
+}
+#controlsphone{
+    margin-left:10%; 
+}
+legend{
+    display: none;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 2.5em;
+    background-color: rgba(0, 0, 100, 0.5);
+    border-radius: 10px 10px;
+    padding: 5px;
+    box-shadow: 0px 0px 10px darkblue;
+}
+
+img{
+    margin-bottom: 20px;
+}
+
+
+@media  (max-width: 500px){
+    h1{
+        display: none;
+    }
+    .icons{
+        display: none;
+    }
+    
+    #controlsphone{
+        display:none;
+    }
+
+    #footer{
+        
+    }
+    #main{
+        width: 100%;
+    }  
+
+    legend{
+        transform: translateY(-45px);
+    }
+
+    fieldset{
+        margin-bottom: 50px;
+    }
+    #controls,#camera{
+        display: none;
+    }
+
+    #controls, #camera {
+        width: 98%;
+        height: 10%;
+        margin: 0;
+        padding: 3px;
+    }
+
+    #controls>legend, #camera>legend{
+        display: none;
+    }
+
+}
+
+
+
