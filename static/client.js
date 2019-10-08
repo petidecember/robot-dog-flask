@@ -1,5 +1,5 @@
 let ws;
-let streamWs;
+// let streamWs;
 let myImage = document.getElementById("stream");
 
 let calibration = false;
@@ -119,7 +119,7 @@ function changeStabilise() {
 function start() {
     document.getElementById('start').style.display = 'none';
     ws = new WebSocket("ws://10.3.141.1:1337");
-    streamWs = new WebSocket("ws://10.3.141.1:1338");
+    // streamWs = new WebSocket("ws://10.3.141.1:1338");
     ws.onopen = function(event) {
         console.log("open");
     };
@@ -134,18 +134,18 @@ function start() {
         }
     };
     
-    streamWs.onopen = function(event) {
-        console.log("open");
-    };
-    streamWs.onmessage = function(event) {
-        var objectURL = URL.createObjectURL(event.data);
-        myImage.src = objectURL;
-    };
+    // streamWs.onopen = function(event) {
+    //     console.log("open");
+    // };
+    // streamWs.onmessage = function(event) {
+    //     var objectURL = URL.createObjectURL(event.data);
+    //     myImage.src = objectURL;
+    // };
     document.getElementById('stop').style.display = 'inline-block';
 }
 
 function stop() {
     ws.close();
-    streamWs.close();
+    // streamWs.close();
     document.getElementById('stop').style.display = 'none';
 }
