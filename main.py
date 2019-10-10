@@ -6,6 +6,8 @@ import threading
 import cv2
 import time
 import numpy as np
+import websockets
+import signal
 
 class VideoCaptureAsync:
     def __init__(self, src=0, width=640, height=480):
@@ -52,14 +54,68 @@ class VideoCaptureAsync:
     def __exit__(self, exec_type, exc_value, traceback):
         self.cap.release()
 
+class ProcessingThread:
+    def __init__(self, vs, state):
+        self.started = False
+        self.vs = vs
+        self.state = state
+        self.processedFrame = None
+
+    def start(self):
+        if self.started:
+            print('[!] Frame processing thread has already been started.')
+            return None
+        self.started = True
+        self.thread = threading.Thread(target=self.process, args=())
+        self.thread.start()
+        return self
+
+    def process(self):
+        vs = self.vs
+        someState = self.state
+        while True:
+            resWidth, resHeight = someState.resizeWidth, someState.resizeHeight
+            grabbed, frame = vs.read()
+            
+            resizedFrame = resize(frame, resWidth, resHeight)
+            
+            if someState.calibrate:
+                a = resHeight*0.2
+                calibBB = calc_sized_bb(resWidth, resHeight, a)
+                (x, y, w, h) = round_bb(calibBB)
+                cv2.rectangle(resizedFrame, (x, y), (w, h), color=(255, 0, 0), thickness=4)
+                someState.hsv = calibrate(resizedFrame, someState, x, y, w, h)
+            if someState.followBall:
+                (someState.x, someState.y), someState.radius = find_ball(frame, resizedFrame, someState, resWidth, resHeight)
+            if someState.drawBall:
+                cv2.circle(resizedFrame, (someState.x, someState.y), 5, (0, 0, 255), -1)
+                cv2.circle(resizedFrame, (someState.x, someState.y), someState.radius, (0, 255, 255), 2)
+
+            self.processedFrame = resizedFrame
+
+    def processed_frame(self):
+        return self.processedFrame
+
+    def stop(self):
+        self.started = False
+        self.thread.join()
+
+    def __exit__(self, exec_type, exc_value, traceback):
+        pass
+
 class State:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.width = 640
+        self.height = 480
+        self.resizeWidth = 256
+        self.resizeHeight = 192
         self.calibrate = False
-        self.process_calibration = False
+        self.processCalibration = False
         self.hsv = (0, 100, 100)
-        self.follow_ball = False
-        self.stabilise = False
+        self.followBall = True
+        self.drawBall = True
+        self.stabilise = True
 
         #ball properties
         self.x = 0
@@ -95,13 +151,9 @@ def calc_dominant_color(buffer):
 #-----------------------------------------------------------#
 #-----------------------------------------------------------#
 
-def calibrate(buffer, state, resWidth, resHeight):
-    a = resHeight*0.2
-    calibBB = calc_sized_bb(resWidth, resHeight, a)
-    (x, y, w, h) = round_bb(calibBB)
-    cv2.rectangle(buffer, (x, y), (w, h), color=(255, 0, 0), thickness=4)
-    if state.process_calibration:
-        state.process_calibration = False
+def calibrate(buffer, state, x, y, w, h):
+    if state.processCalibration:
+        state.processCalibration = False
         state.calibrate = False
         cutout = buffer[y:h, x:w]
         return calc_dominant_color(cutout)
@@ -109,32 +161,31 @@ def calibrate(buffer, state, resWidth, resHeight):
 def temp():
     col = cv2.cvtColor(np.uint8([[config.hsv]]), cv2.COLOR_HSV2RGB)[0][0][:] # TODO Setup controls and this
 
-def find_ball(original_frame, resized_frame, state, resWidth, resHeight):
+def find_ball(originalFrame, resizedFrame, state, resWidth, resHeight):
     (h, s, v) = state.hsv
     lowerBound = np.array([h-10, 100, 100])
     upperBound = np.array([h+10, 255, 255])
-    active_frm = original_frame
-    draw_frm = resized_frame
+    activeFrm = originalFrame
+    drawFrm = resizedFrame
     if state.stabilise:
-        active_frm = cv2.GaussianBlur(active_frm, (9, 9), 0)
-    hsv = cv2.cvtColor(active_frm, cv2.COLOR_BGR2HSV)
+        activeFrm = cv2.GaussianBlur(activeFrm, (9, 9), 0)
+    hsv = cv2.cvtColor(activeFrm, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(hsv, lowerBound, upperBound)
     if state.stabilise:
         mask = cv2.erode(mask, None, iterations=2)
         mask = cv2.dilate(mask, None, iterations=2)
-    masked = cv2.bitwise_and(active_frm, active_frm, mask=mask)
+    masked = cv2.bitwise_and(activeFrm, activeFrm, mask=mask)
 
     _, cnts, hierarchy = cv2.findContours(cv2.cvtColor(masked, cv2.COLOR_BGR2GRAY), cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
     if cnts:
         cont = max(cnts, key=cv2.contourArea) # take the biggest contour
         M = cv2.moments(cont)
+        
         ((x, y), radius) = cv2.minEnclosingCircle(cont) # make a circle out of it
         ((x, y), radius) = ((x/state.width*resWidth, y/state.height*resHeight), radius/state.width*resWidth) # then resize to fit on the buffer
-        #ee.emit("ball_found", ((x, y), radius))
-        return ((x, y), radius)
-        if state.draw_ball:
-            cv2.circle(draw_frm, (int(x), int(y)), 5, (0, 0, 255), -1)
-            cv2.circle(draw_frm, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+        return ((int(x), int(y)), int(radius))
+    else:
+        return((state.x, state.y), state.radius)
 
 def jpg_bytes(to_jpg):
     _, jpg = cv2.imencode('.jpg', to_jpg)
@@ -143,8 +194,8 @@ def jpg_bytes(to_jpg):
 vs = VideoCaptureAsync(0)
 time.sleep(2.0)
 
-outputFrame = None
 someState = State()
+pt = ProcessingThread(vs, someState)
 
 app = Flask(__name__)
 
@@ -152,22 +203,14 @@ app = Flask(__name__)
 @app.route("/index")
 def index():
     return render_template("index.html")
-
-def t():
-    resWidth, resHeight = 256, 192
-    resizedFrame = resize(outputFrame, resWidth, resHeight)
-    if someState.calibrate:
-        someState.hsv = calibrate(resizedFrame, someState, resWidth, resHeight)
-    if someState.follow_ball:
-        (someState.x, someState.y), someState.radius = find_ball(outputFrame, resizedFrame, someState, resWidth, resHeight)
-
+        
 def stream():
-    global outputFrame, vs
-
+    global pt
     while True:
-        time.sleep(1.0/20.0)
-        grabbed, outputFrame = vs.read()
-        yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + jpg_bytes(outputFrame) + b'\r\n')
+        outputFrame = pt.processed_frame()
+        if outputFrame is not None:
+            time.sleep(1.0/20.0)
+            yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + jpg_bytes(outputFrame) + b'\r\n')
 
 @app.route("/video_stream")
 def video_stream():
@@ -178,8 +221,10 @@ def video_stream():
 
 if __name__ == '__main__':
     vs.start()
+    pt.start()
 
     app.run(host="0.0.0.0", port=8080, debug=True,
 		threaded=True, use_reloader=False)
 
+pt.stop()
 vs.stop()
