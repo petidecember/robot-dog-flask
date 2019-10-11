@@ -118,7 +118,7 @@ function changeStabilise() {
 
 function start() {
     document.getElementById('start').style.display = 'none';
-    ws = new WebSocket("ws://10.3.141.1:1337");
+    ws = new WebSocket("ws://10.3.141.1:1338");
     // streamWs = new WebSocket("ws://10.3.141.1:1338");
     ws.onopen = function(event) {
         console.log("open");
