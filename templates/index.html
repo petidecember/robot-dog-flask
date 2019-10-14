@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css" media="screen" href="static/joystick.css">
     <title>WebRTC webcam</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="static/transitions.js" defer></script>
+    <script src="static/client.js" defer></script>
 </head>
 <body>
 
@@ -41,8 +43,6 @@
                                 <fieldset id="camera">
                                     <legend>Camera</legend>
                                     <div class="cameraFieldset">
-                                        <button id="start" onclick="javascript: start()">Start</button>
-                                        <button id="stop" style="display: none" onclick="javascript: stop()">Stop</button>
                                         <label>Size:
                                         <select id="size" onchange="javascript: changeSize()">
                                             <option value="100%">100%</option>
@@ -57,28 +57,25 @@
                                     </div>
                                 </fieldset>
 
-                                <div id="media">   
-    
-                                    <!-- <audio id="audio" autoplay="true"></audio>
-                                    <video id="video" autoplay="true" playsinline="true"></video> -->
+                                <div id="media">
                                     <!--img id="stream"-->
                                     <img id="stream" src="{{ url_for('video_stream') }}">
                                 </div>
 
                                 <fieldset id="controls">
                                     <legend>Tracking Controls</legend>
-                                    <div class="controlsFieldset">
+                                    <div class="controlsFieldset"></div>
                                         <div>
                                             <div class="square"></div>
                                             <button id="cal" onclick="javascript: calibrate()">Calibrate</button>
                                         </div>
                                         <div>
                                             <div id="follow" class="circle"></div>
-                                            <button id="followb" onclick="javascript: follow_ball()">Follow Ball</button>
+                                            <button id="followb" onclick="javascript: send_toggle_follow()">Find Ball</button>
                                         </div>
                                         <div>
                                             <div id="draw" class="circle"></div>
-                                            <button id="drawb" onclick="javascript: draw_ball()">Draw Ball</button>
+                                            <button id="drawb" onclick="javascript: send_toggle_draw()">Draw Ball</button>
                                         </div>
                                     </div>
                                 </fieldset>
@@ -104,9 +101,5 @@
                         </footer>
     
                 </div>
-    
-            <!-- Scripts -->
-            <script src="static/transitions.js"></script>
-            <script src="static/client.js"></script>
     </body>
 </html>

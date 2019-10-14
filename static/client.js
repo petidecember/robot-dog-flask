@@ -52,11 +52,11 @@ function moveRobot(event) {
     }
 
     if(map[65]||map[37]) { //a
-        ws.send('joyR;180;100');
+        ws.send('joyR;-100');
         ws.send('setC;110');
     }
     else if(map[68]||map[39]) { //d
-        ws.send('joyR;0;100');
+        ws.send('joyR;100');
         ws.send('setC;70');
     }
 
@@ -64,7 +64,7 @@ function moveRobot(event) {
 
 function stopMove(event) {
     if(event.keyCode == 65 || event.keyCode == 68 || event.keyCode == 37 || event.keyCode == 39) {
-        ws.send('joyR;0;0');
+        ws.send('joyR;0');
         ws.send('setC;90');
     }
 }
@@ -86,25 +86,28 @@ function calibrate() {
     }
 }
 
-function follow_ball() {
-    ball_follow = !ball_follow;
-    if(ball_follow) {
+function set_follow_ball(set) {
+    if(set) {
         document.getElementById('follow').style.backgroundColor = "lightgreen";
     } else {
         document.getElementById('follow').style.backgroundColor = "darkred";
     }
-    ws.send("camera;ball_"+ball_follow);
 }
 
-function draw_ball() {
-    ball_draw = !ball_draw;
-    if(ball_draw) {
+function send_toggle_follow() {
+    ws.send("camera;toggle_follow");
+}
+
+function set_draw_ball(set) {
+    if(set) {
         document.getElementById('draw').style.backgroundColor = "lightgreen";
     } else {
         document.getElementById('draw').style.backgroundColor = "darkred";
     }
+}
 
-    ws.send("camera;draw_"+ball_draw);
+function send_toggle_draw() {
+    ws.send("camera;toggle_draw");
 }
 
 function changeSize() {
@@ -117,14 +120,12 @@ function changeStabilise() {
 }
 
 function start() {
-    document.getElementById('start').style.display = 'none';
-    ws = new WebSocket("ws://10.3.141.1:1338");
-    // streamWs = new WebSocket("ws://10.3.141.1:1338");
+    ws = new WebSocket("ws://10.3.141.1:1337");
+    
     ws.onopen = function(event) {
         console.log("open");
     };
     ws.onmessage = function(event) {
-        //console.log(event.data);
         let cmd = event.data.split(';');
         if(cmd[0] === "calibration") {
             let r = Number(cmd[1]);
@@ -132,20 +133,18 @@ function start() {
             let b = Number(cmd[3]);
             document.getElementsByClassName('square')[0].style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
         }
+        else if(cmd[0] === "camera") {
+            
+            let set = Boolean(Number(cmd[2]));
+            if(cmd[1] === "draw") {
+                set_draw_ball(set);
+            }
+            else if(cmd[1] === "follow") {
+                set_follow_ball(set);
+            }
+        }
+        console.log(cmd)
     };
-    
-    // streamWs.onopen = function(event) {
-    //     console.log("open");
-    // };
-    // streamWs.onmessage = function(event) {
-    //     var objectURL = URL.createObjectURL(event.data);
-    //     myImage.src = objectURL;
-    // };
-    document.getElementById('stop').style.display = 'inline-block';
 }
 
-function stop() {
-    ws.close();
-    // streamWs.close();
-    document.getElementById('stop').style.display = 'none';
-}
+start();

@@ -75,14 +75,10 @@ function jsjoy(event) {
         angl=270;
     }
     standing = false;
-    devider++;
-    if(devider>5){
-        devider=0;
-        ws.send('joyL;'+angl+';'+parseInt(r));
-        ws.send('joyR;'+(parseInt(xjoy))+';100');
-        let cam = 90+parseInt(-20*(xjoy/100));
-        ws.send('setC;'+cam);
-    }
+    ws.send('joyL;'+angl+';'+parseInt(r));
+    ws.send('joyR;'+(parseInt(xjoy)));
+    let cam = 90+parseInt(-20*(xjoy/100));
+    ws.send('setC;'+cam);
 }
 
 joystickphone.addEventListener("touchend",posres);
@@ -91,7 +87,7 @@ function posres(event){
     r=0;
     joystickbuttn.style.transform="translate(0px,0px)";
     document.getElementById("demo").innerHTML="0,0";
-    ws.send('joyR;0;0');
+    ws.send('joyR;0');
     ws.send('setC;90');
     ws.send('joyL;90;0');
     standing = true;
